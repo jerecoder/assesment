@@ -14,10 +14,6 @@
   - **Dataherald Engine:** Pensado para entornos productivos complejos. Sobredimensionado para uso local.
   - **Chat2DB:** Enfocado en usuarios finales vía UI gráfica. No se integra bien como componente backend.
   - **Uso directo del API de OpenAI:** Válido, pero LangChain ya resuelve mucho del trabajo manual y permite modularidad.
-
-- **Resumen:**  
-  LangChain + GPT-3.5 permite una solución simple, efectiva y lista para crecer si se requiere.
-
 ---
 
 ## 2. Inferencia de Esquema y Tipado
