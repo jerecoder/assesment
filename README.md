@@ -3,7 +3,7 @@
 
 ## Descripción
 
-El sistema permite a los usuarios hacer preguntas en lenguaje natural sobre los datos de paradas de máquina, que se convierten automáticamente en consultas SQL y se ejecutan contra una base de datos SQLite.
+El sistema permite a los usuarios hacer preguntas en lenguaje natural sobre los datos de `machine stops`, que se convierten automáticamente en consultas SQL y se ejecutan contra una base de datos SQLite.
 
 
 ## Instalación
@@ -33,7 +33,7 @@ Para usar el sistema:
 - Ingresa tus preguntas en lenguaje natural
 - El sistema generará y ejecutará las consultas SQL correspondientes
 - Los resultados se mostrarán en formato tabular
-- Escribe 'exit' para salir
+- Escribe `exit` para salir
 
 ## Ejemplos de Preguntas
 
@@ -59,7 +59,7 @@ Para usar el sistema:
 
 1. **Proveedor LLM**: OpenAI GPT-3.5-turbo
    - Excelente rendimiento en tareas de generación de SQL
-   - Costo-efectivo para este tipo de aplicación
+   - Cost-effective 
 
 2. **Base de Datos**: SQLite
    - Almacenamiento local y simplicidad
