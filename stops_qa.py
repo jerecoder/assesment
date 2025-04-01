@@ -9,8 +9,11 @@ from rich.table import Table
 from rich.syntax import Syntax
 from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Dict, Any
 import re
+import json
+import hashlib
+from pathlib import Path
 
 TEXTOS = {
     "bienvenida": """
@@ -36,13 +39,46 @@ de máquina y las convierte en consultas SQL para su análisis.
     "error": "\n[bold red]Error:[/bold red]",
     "error_fatal": "\n[bold red]Error Fatal:[/bold red]",
     "sin_resultados": "No se encontraron resultados.",
-    "error_query": "Error al ejecutar la consulta: {}"
+    "error_query": "Error al ejecutar la consulta: {}",
+    "cache_hit": "[blue]Usando consulta en caché[/blue]",
+    "cache_miss": "[yellow]Generando nueva consulta SQL...[/yellow]"
 }
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 console = Console()
 load_dotenv()
+
+CACHE_DIR = Path("cache")
+CACHE_FILE = CACHE_DIR / "query_cache.json"
+
+def setup_cache():
+    CACHE_DIR.mkdir(exist_ok=True)
+    if not CACHE_FILE.exists():
+        CACHE_FILE.write_text("{}")
+
+def get_cache_key(question: str) -> str:
+    return hashlib.md5(question.lower().encode()).hexdigest()
+
+def get_cached_query(question: str) -> Optional[str]:
+    try:
+        cache = json.loads(CACHE_FILE.read_text())
+        cache_key = get_cache_key(question)
+        if cache_key in cache:
+            console.print(TEXTOS["cache_hit"])
+            return cache[cache_key]
+    except Exception as e:
+        console.print(f"[red]Error al leer la caché: {str(e)}[/red]")
+    return None
+
+def cache_query(question: str, query: str):
+    try:
+        cache = json.loads(CACHE_FILE.read_text())
+        cache_key = get_cache_key(question)
+        cache[cache_key] = query
+        CACHE_FILE.write_text(json.dumps(cache, indent=2))
+    except Exception as e:
+        console.print(f"[red]Error al escribir en la caché: {str(e)}[/red]")
 
 def setup_database(db_name: str = "stops.db") -> sqlite3.Connection:
     with console.status("[bold green]Configurando base de datos SQLite...") as status:
@@ -138,6 +174,26 @@ def display_query_result(sql_query: str, results: Optional[Table], error: Option
     if results:
         console.print(TEXTOS["resultados"])
         console.print(results)
+
+def generate_sql_query(question: str) -> str:
+    cached_query = get_cached_query(question)
+    if cached_query:
+        return cached_query
+
+    console.print(TEXTOS["cache_miss"])
+    
+    try:
+        llm, prompt = create_sql_generator()
+        messages = prompt.format_messages(question=question)
+        response = llm.invoke(messages)
+        query = clean_sql_response(response.content)
+        
+        cache_query(question, query)
+        
+        return query
+    except Exception as e:
+        console.print(f"{TEXTOS['error']} {str(e)}")
+        raise
 
 def main():
     try:
