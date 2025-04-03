@@ -10,7 +10,6 @@ from src.ui.texts import TEXTOS
 
 
 load_dotenv()
-os.environ["LANGSMITH_TRACING"] = "true"
 
 logging.basicConfig(
     level=logging.INFO,
