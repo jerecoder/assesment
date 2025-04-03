@@ -3,7 +3,7 @@
 
 ## Descripción
 
-El sistema permite a los usuarios hacer preguntas en lenguaje natural sobre los datos de `machine stops`, que se convierten automáticamente en consultas SQL y se ejecutan contra una base de datos SQLite.
+El sistema permite a los usuarios interactuar con un agente que responde preguntas sobre machine stops.
 
 
 ## Instalación
@@ -27,13 +27,14 @@ pip install -r requirements.txt
 
 ## Uso
 
-El sistema se ejecuta a través del notebook `stops_qa.ipynb`, que proporciona una interfaz interactiva.
+Ejecutar el archivo stops_qa.py
 
-Para usar el sistema:
-- Ingresa tus preguntas en lenguaje natural
-- El sistema generará y ejecutará las consultas SQL correspondientes
-- Los resultados se mostrarán en formato tabular
-- Escribe `exit` para salir
+## Características
+
+- **Interfaz Interactiva**: Preguntas en lenguaje natural
+- **Caché Inteligente**: Almacena y reutiliza consultas frecuentes
+- **Visualización Clara**: Resultados en formato tabular
+- **Manejo de Errores**: Validación y mensajes claros
 
 ## Ejemplos de Preguntas
 
@@ -42,22 +43,10 @@ Para usar el sistema:
 - ¿Cuál es la duración promedio de cada tipo de parada?
 - ¿Qué hora del día tuvo la duración total de paradas más larga?
 
-## Estructura del Proyecto
-
-```
-.
-├── README.md
-├── requirements.txt
-├── stops_qa.py
-├── stops_qa.ipynb
-├── simulated_stops.csv
-├── model.md
-└── .env
-```
 
 ## Decisiones Técnicas
 
-1. **Proveedor LLM**: OpenAI GPT-3.5-turbo
+1. **Proveedor LLM**: OpenAI GPT-3.5-turbo + LangChain/Graph
    - Excelente rendimiento en tareas de generación de SQL
    - Cost-effective 
 
@@ -71,15 +60,12 @@ Para usar el sistema:
    - Visualización clara de resultados
    - Formato mejorado para la terminal
 
-4. **Manejo de Errores**:
-   - Validación de consultas SQL
-   - Manejo de casos sin resultados
-   - Logging para debugging
 
 ## Documentación
 
 - `model.md`: Documentación detallada del modelo de datos y esquema
 - `README.md`: Guía de instalación y uso
 - Docstrings en el código: Documentación de funciones y clases
+
 
  

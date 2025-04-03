@@ -3,7 +3,7 @@ from langchain_core.tools import tool
 
 @tool
 def execute_sql(query: str) -> str:
-    """Execute a SQL query and return the results as a formatted string."""
+    """Ejecuta query y guarda en string"""
     try:
         with sqlite3.connect("stops.db") as conn:
             cursor = conn.cursor()
@@ -13,7 +13,6 @@ def execute_sql(query: str) -> str:
                 return "No results found"
             
             columns = [desc[0] for desc in cursor.description]
-            # Format results as a readable string
             result = "Columns: " + ", ".join(columns) + "\n"
             result += "\nRows:\n"
             for row in rows:
